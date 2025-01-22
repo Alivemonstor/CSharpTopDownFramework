@@ -12,8 +12,6 @@ public class PlayerInteraction : MonoBehaviour
         {
             interactionText.gameObject.SetActive(true);
             interactionText.text = interactionPoint.GetText();
-            Debug.Log(interactionText.rectTransform.position);
-            Debug.Log(Camera.main);
             interactionText.rectTransform.position = Camera.main.WorldToScreenPoint(interactionPoint.transform.position); 
 
             if (Input.GetKeyDown(KeyCode.E))
