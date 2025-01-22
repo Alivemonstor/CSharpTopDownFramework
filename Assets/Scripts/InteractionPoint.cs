@@ -1,38 +1,19 @@
 using UnityEngine;
 
-public class InteractionPoint : MonoBehaviour
+public abstract class InteractionPoint : MonoBehaviour
 {
-
-    public Transform detectionPoint;
-
-    [SerializeField] private const float detectionRadius = 0.2f;
-
-    public LayerMask detectionLayer;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public virtual bool CanInteract()
     {
-        
+        return Random.Range(0, 2) == 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void Interact()
     {
-        if(DetectInteraction())
-        {
-            if(InteractInput())
-            {
-                Debug.Log("Yeah");
-            }
-        }
+        Debug.Log("Interacting with " + gameObject.name);
     }
 
-    bool InteractInput()
+    public virtual string GetText()
     {
-        return Input.GetKeyDown(KeyCode.E);
-    }
-
-    bool DetectInteraction()
-    {
-        return Physics2D.OverlapCircle(detectionPoint.position, detectionRadius, detectionLayer);
+        return "Press E to interact with " + gameObject.name;
     }
 }

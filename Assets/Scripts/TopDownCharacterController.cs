@@ -20,6 +20,7 @@ public class TopDownCharacterController : MonoBehaviour
     
     //The direction that the player is moving in.
     private Vector2 m_playerDirection;
+    public int m_score = 0; 
    
 
     [Header("Movement parameters")]
@@ -87,12 +88,5 @@ public class TopDownCharacterController : MonoBehaviour
             m_animator.SetFloat("Vertical", m_playerDirection.y);
         }
 
-        // check if an attack has been triggered.
-        if (m_attackAction.IsPressed())
-        {
-            // just log that an attack has been registered for now
-            // we will look at how to do this in future sessions.
-            Debug.Log("Attack!");
-        }
     }
 }
