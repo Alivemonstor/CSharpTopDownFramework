@@ -2520,7 +2520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textlist: []
   Client: {fileID: 1870609564}
-  Panel: {fileID: 0}
+  Panel: {fileID: 632243672}
 --- !u!222 &843417944
 CanvasRenderer:
   m_ObjectHideFlags: 0

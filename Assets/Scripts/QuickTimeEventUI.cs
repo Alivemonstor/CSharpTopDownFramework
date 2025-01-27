@@ -4,7 +4,6 @@ public class QuickTimeEventUI : MonoBehaviour
 {
     public List<TMPro.TextMeshProUGUI> textlist = new List<TMPro.TextMeshProUGUI>();
     [SerializeField] private QuickTimeEvent Client; 
-
     [SerializeField] private GameObject Panel;
 
 
@@ -30,7 +29,7 @@ public class QuickTimeEventUI : MonoBehaviour
     
     public void StartUI()
     {
-        Panel.SetActive(true);
+        Panel.SetActive(false);
     }
 
     public void ButtonPressed()
@@ -51,7 +50,7 @@ public class QuickTimeEventUI : MonoBehaviour
 
     public void SendSequence(KeyCode key)
     {
-        GameObject gameObject = new GameObject("Key" + key.ToString());
+        GameObject gameObject = new GameObject("Key " + key.ToString());
         gameObject.transform.SetParent(this.gameObject.transform);
         TMPro.TextMeshProUGUI keyText = gameObject.AddComponent<TMPro.TextMeshProUGUI>();
         keyText.text = key.ToString();
