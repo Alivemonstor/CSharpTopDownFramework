@@ -12,6 +12,7 @@ public class QuickTimeEvent : MonoBehaviour
     public void StartQuickTimeEvent()
     {
         isRunning = true;
+        UI.StartUI();
         StartCoroutine(WaitAndQueue());
     }
 
@@ -43,8 +44,9 @@ public class QuickTimeEvent : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 UI.StopUI();
+                isRunning = false;
+                sequence.Clear();
             }
         }
     }
-
 }

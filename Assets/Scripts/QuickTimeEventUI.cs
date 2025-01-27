@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
-
 public class QuickTimeEventUI : MonoBehaviour
 {
-
     public List<TMPro.TextMeshProUGUI> textlist = new List<TMPro.TextMeshProUGUI>();
     [SerializeField] private QuickTimeEvent Client; 
+
+    [SerializeField] private GameObject Panel;
 
 
     // Update is called once per frame
@@ -18,7 +18,6 @@ public class QuickTimeEventUI : MonoBehaviour
         for (int i = 0; i < textlist.Count; i++)
         {
             TMPro.TextMeshProUGUI text = textlist[i];
-            Debug.Log(text.gameObject.transform.position);
             if (!Screen.safeArea.Contains(text.gameObject.transform.position))
             {
                 Destroy(text.gameObject);
@@ -29,10 +28,14 @@ public class QuickTimeEventUI : MonoBehaviour
         }
     }
     
+    public void StartUI()
+    {
+        Panel.SetActive(true);
+    }
 
     public void ButtonPressed()
     {
-        Destroy(textlist[0]);
+        Destroy(textlist[0].gameObject);
         textlist.RemoveAt(0);
     }
 
@@ -43,11 +46,12 @@ public class QuickTimeEventUI : MonoBehaviour
             Destroy(text.gameObject);
         }
         textlist.Clear();
+        Panel.SetActive(false);
     }
 
     public void SendSequence(KeyCode key)
     {
-        GameObject gameObject = new GameObject();
+        GameObject gameObject = new GameObject("Key" + key.ToString());
         gameObject.transform.SetParent(this.gameObject.transform);
         TMPro.TextMeshProUGUI keyText = gameObject.AddComponent<TMPro.TextMeshProUGUI>();
         keyText.text = key.ToString();
