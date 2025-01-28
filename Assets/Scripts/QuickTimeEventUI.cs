@@ -23,19 +23,28 @@ public class QuickTimeEventUI : MonoBehaviour
                 textlist.Remove(text);
                 Client.sequence.Dequeue();
             }
-            text.gameObject.transform.position = new Vector3(text.gameObject.transform.position.x - 1, text.gameObject.transform.position.y, text.gameObject.transform.position.z);            
+            text.gameObject.transform.position = new Vector3(text.gameObject.transform.position.x - 2, text.gameObject.transform.position.y, text.gameObject.transform.position.z);            
         }
     }
     
     public void StartUI()
     {
-        Panel.SetActive(false);
+        Panel.SetActive(true);
     }
 
-    public void ButtonPressed()
+    public void ButtonPressed(bool hit)
     {
-        Destroy(textlist[0].gameObject);
-        textlist.RemoveAt(0);
+        if (hit)
+        {
+            GetButtonOnPanel();
+            Destroy(textlist[0].gameObject);
+            textlist.RemoveAt(0);
+        }
+        else
+        {
+            Destroy(textlist[0].gameObject);
+            
+        }
     }
 
     public void StopUI()
@@ -56,5 +65,21 @@ public class QuickTimeEventUI : MonoBehaviour
         keyText.text = key.ToString();
         gameObject.transform.position = new Vector3(Screen.width - 100, Screen.height / 2, 0);
         textlist.Add(keyText);
+    }
+
+    public TMPro.TextMeshProUGUI GetButtonOnPanel()
+    {
+        Debug.Log(Panel.GetComponent<RectTransform>().localPosition.x);
+        foreach (TMPro.TextMeshProUGUI text in textlist)
+        {
+            bool blah = text.rectTransform.offsetMin.x <= 200 && text.rectTransform.offsetMin.x >= 0;
+            if (blah) { return text; }
+        }
+        return null;
+    }
+
+    public bool IsInUI()
+    {
+        return Panel.activeSelf;
     }
 }

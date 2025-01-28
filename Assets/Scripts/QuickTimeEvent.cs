@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class QuickTimeEvent : MonoBehaviour
 {
-    public int timeToWait = 1;
+    public int timeToWait = 3;
     [SerializeField] private QuickTimeEventUI UI; 
     public Queue<KeyCode> sequence = new Queue<KeyCode>();
     public List<KeyCode> keys = new List<KeyCode>{KeyCode.A, KeyCode.S, KeyCode.D};
@@ -31,21 +31,24 @@ public class QuickTimeEvent : MonoBehaviour
     {
         if (isRunning && Input.anyKeyDown)
         {
-            if (Input.GetKeyDown(sequence.Peek()))
+            if (sequence.Count > 0)
             {
-                sequence.Dequeue();
-                UI.ButtonPressed();
-            }
-            else
-            {
-                Debug.Log("Wrong key pressed!");
-            }
+                if (Input.GetKeyDown(sequence.Peek()))
+                {
+                    sequence.Dequeue();
+                    UI.ButtonPressed(true);
+                }
+                else
+                {
+                    UI.ButtonPressed(false);
+                }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                UI.StopUI();
-                isRunning = false;
-                sequence.Clear();
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    UI.StopUI();
+                    isRunning = false;
+                    sequence.Clear();
+                }
             }
         }
     }

@@ -31,6 +31,9 @@ public class TopDownCharacterController : MonoBehaviour
 
     #endregion
 
+    [SerializeField] private QuickTimeEventUI UI;
+
+
     /// <summary>
     /// When the script first initialises this gets called.
     /// Use this for grabbing components and setting up input bindings.
@@ -75,8 +78,10 @@ public class TopDownCharacterController : MonoBehaviour
     void Update()
     {
         // store any movement inputs into m_playerDirection - this will be used in FixedUpdate to move the player.
-        m_playerDirection = m_moveAction.ReadValue<Vector2>();
-        
+        if (!UI.IsInUI())
+        {
+            m_playerDirection = m_moveAction.ReadValue<Vector2>();
+        }
         // ~~ handle animator ~~
         // Update the animator speed to ensure that we revert to idle if the player doesn't move.
         m_animator.SetFloat("Speed", m_playerDirection.magnitude);
