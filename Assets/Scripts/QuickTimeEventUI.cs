@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 public class QuickTimeEventUI : MonoBehaviour
 {
-    public List<TMPro.TextMeshProUGUI> textlist = new List<TMPro.TextMeshProUGUI>();
+    public Dictionary<TMPro.TextMeshProUGUI, QuickTimeEventObject> textlist = new Dictionary<TMPro.TextMeshProUGUI, QuickTimeEventObject>();
     [SerializeField] private QuickTimeEvent Client; 
     [SerializeField] private GameObject Panel;
 
@@ -14,16 +16,21 @@ public class QuickTimeEventUI : MonoBehaviour
         {
             return;
         }
-        for (int i = 0; i < textlist.Count; i++)
+
+
+        for (int i = 0, textlistCount = textlist.Keys.Count; i < textlistCount; i++)
         {
-            TMPro.TextMeshProUGUI text = textlist[i];
-            if (!Screen.safeArea.Contains(text.gameObject.transform.position))
+            TMPro.TextMeshProUGUI text = textlist.Keys.ElementAt(i);
+            Debug.Log(textlist[text].time + textlist[text].duration);
+            Debug.Log(text);
+            if (textlist[text].time + textlist[text].duration < Time.time)
             {
                 Destroy(text.gameObject);
                 textlist.Remove(text);
-                Client.sequence.Dequeue();
+                i-=1;
+                continue;
             }
-            text.gameObject.transform.position = new Vector3(text.gameObject.transform.position.x - 2, text.gameObject.transform.position.y, text.gameObject.transform.position.z);            
+            text.rectTransform.position = new Vector3(text.rectTransform.position.x - (Screen.width / textlist[text].duration) * Time.fixedDeltaTime, text.rectTransform.position.y, text.rectTransform.position.z);
         }
     }
     
@@ -36,20 +43,22 @@ public class QuickTimeEventUI : MonoBehaviour
     {
         if (hit)
         {
-            GetButtonOnPanel();
-            Destroy(textlist[0].gameObject);
-            textlist.RemoveAt(0);
+            TMPro.TextMeshProUGUI textObject = GetButtonClosestToEndTime();
+            if (textObject != null)
+            {
+                Destroy(textObject.gameObject);
+                textlist.Remove(textObject);
+            }
         }
         else
         {
-            Destroy(textlist[0].gameObject);
-            
+            // Destroy(textlist[0].gameObject);
         }
     }
 
     public void StopUI()
     {
-        foreach (TMPro.TextMeshProUGUI text in textlist)
+        foreach (TMPro.TextMeshProUGUI text in textlist.Keys)
         {
             Destroy(text.gameObject);
         }
@@ -57,25 +66,31 @@ public class QuickTimeEventUI : MonoBehaviour
         Panel.SetActive(false);
     }
 
-    public void SendSequence(KeyCode key)
+    public void SendSequence(QuickTimeEventObject KeyObject)
     {
-        GameObject gameObject = new GameObject("Key " + key.ToString());
+        
+        GameObject gameObject = new GameObject("Key " + KeyObject.key.ToString());
         gameObject.transform.SetParent(this.gameObject.transform);
         TMPro.TextMeshProUGUI keyText = gameObject.AddComponent<TMPro.TextMeshProUGUI>();
-        keyText.text = key.ToString();
+        keyText.text = KeyObject.key.ToString();
         gameObject.transform.position = new Vector3(Screen.width - 100, Screen.height / 2, 0);
-        textlist.Add(keyText);
+        textlist.Add(keyText, KeyObject);
+
     }
 
-    public TMPro.TextMeshProUGUI GetButtonOnPanel()
+    public TMPro.TextMeshProUGUI GetButtonClosestToEndTime()
     {
-        Debug.Log(Panel.GetComponent<RectTransform>().localPosition.x);
-        foreach (TMPro.TextMeshProUGUI text in textlist)
+        TMPro.TextMeshProUGUI closest = null;
+        float closestTime = 0;
+        foreach (TMPro.TextMeshProUGUI text in textlist.Keys)
         {
-            bool blah = text.rectTransform.offsetMin.x <= 200 && text.rectTransform.offsetMin.x >= 0;
-            if (blah) { return text; }
+            if (textlist[text].time + textlist[text].duration < closestTime)
+            {
+                closest = text;
+                closestTime = textlist[text].time + textlist[text].duration;
+            }
         }
-        return null;
+        return closest;
     }
 
     public bool IsInUI()

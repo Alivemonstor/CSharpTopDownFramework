@@ -6,7 +6,8 @@ public class QuickTimeEvent : MonoBehaviour
 {
     public int timeToWait = 3;
     [SerializeField] private QuickTimeEventUI UI; 
-    public Queue<KeyCode> sequence = new Queue<KeyCode>();
+    [SerializeField] private float duration = 3;
+    public Queue<QuickTimeEventObject> sequence = new Queue<QuickTimeEventObject>();
     public List<KeyCode> keys = new List<KeyCode>{KeyCode.A, KeyCode.S, KeyCode.D};
     private bool isRunning = false;
     public void StartQuickTimeEvent()
@@ -21,8 +22,14 @@ public class QuickTimeEvent : MonoBehaviour
         while (isRunning)
         {
             KeyCode keytopress = keys[Random.Range(0, keys.Count)];
-            sequence.Enqueue(keytopress);
-            UI.SendSequence(keytopress);
+            QuickTimeEventObject quickTimeEventObject = new QuickTimeEventObject();
+            
+            quickTimeEventObject.key = keytopress;
+            quickTimeEventObject.duration = duration;
+            quickTimeEventObject.time = Time.time;
+
+            sequence.Enqueue(quickTimeEventObject);
+            UI.SendSequence(quickTimeEventObject);
             yield return new WaitForSeconds(timeToWait);
         }
     }
@@ -33,9 +40,9 @@ public class QuickTimeEvent : MonoBehaviour
         {
             if (sequence.Count > 0)
             {
-                if (Input.GetKeyDown(sequence.Peek()))
+                if (Input.GetKeyDown(sequence.Peek().key))
                 {
-                    sequence.Dequeue();
+                    QuickTimeEventObject quickTimeEventObject = sequence.Dequeue();
                     UI.ButtonPressed(true);
                 }
                 else

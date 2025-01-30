@@ -1,0 +1,17 @@
+QuickTimeEvent
+☐ Make sure its within bounding box, if past then delete it and life -1 @started(25-01-29 22:15)
+☐ lives = 3
+☐ if lives = 0, stop quick time event
+☐ if player hits more than 15 quick time events, player wins
+
+Items
+☐ Make Items
+☐ Rarities
+
+Inventory
+☐ Make Inventory
+☐ Add fish to inventory
+
+Shop
+☐ Make Shop
+☐ base shop current selling amount random 
