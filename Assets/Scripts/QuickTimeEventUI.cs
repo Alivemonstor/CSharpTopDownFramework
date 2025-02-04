@@ -7,6 +7,8 @@ public class QuickTimeEventUI : MonoBehaviour
     public Dictionary<TMPro.TextMeshProUGUI, QuickTimeEventObject> textlist = new Dictionary<TMPro.TextMeshProUGUI, QuickTimeEventObject>();
     [SerializeField] private QuickTimeEvent Client; 
     [SerializeField] private GameObject Panel;
+    public List<string> MissedStrings = new List<string>{"You Missed!", "Wrong Key!", "Try Again"};
+
 
 
     // Update is called once per frame
@@ -17,12 +19,23 @@ public class QuickTimeEventUI : MonoBehaviour
             return;
         }
 
-
         for (int i = 0, textlistCount = textlist.Keys.Count; i < textlistCount; i++)
         {
             TMPro.TextMeshProUGUI text = textlist.Keys.ElementAt(i);
-            Debug.Log(textlist[text].time + textlist[text].duration);
-            Debug.Log(text);
+            text.rectTransform.position = new Vector3(text.rectTransform.position.x - (Screen.width / textlist[text].duration) * Time.fixedDeltaTime, text.rectTransform.position.y, text.rectTransform.position.z);
+        }
+    }
+
+    void Update()
+    {
+        if (textlist.Count == 0)
+        {
+            return;
+        }
+        
+        for (int i = 0, textlistCount = textlist.Keys.Count; i < textlistCount; i++)
+        {
+            TMPro.TextMeshProUGUI text = textlist.Keys.ElementAt(i);
             if (textlist[text].time + textlist[text].duration < Time.time)
             {
                 Destroy(text.gameObject);
@@ -30,7 +43,6 @@ public class QuickTimeEventUI : MonoBehaviour
                 i-=1;
                 continue;
             }
-            text.rectTransform.position = new Vector3(text.rectTransform.position.x - (Screen.width / textlist[text].duration) * Time.fixedDeltaTime, text.rectTransform.position.y, text.rectTransform.position.z);
         }
     }
     
@@ -44,6 +56,7 @@ public class QuickTimeEventUI : MonoBehaviour
         if (hit)
         {
             TMPro.TextMeshProUGUI textObject = GetButtonClosestToEndTime();
+            Debug.Log(textObject);
             if (textObject != null)
             {
                 Destroy(textObject.gameObject);
@@ -52,7 +65,14 @@ public class QuickTimeEventUI : MonoBehaviour
         }
         else
         {
-            // Destroy(textlist[0].gameObject);
+            GameObject gameObject = new GameObject("MissedKey");
+            gameObject.transform.SetParent(this.gameObject.transform);
+            TMPro.TextMeshProUGUI keyText = gameObject.AddComponent<TMPro.TextMeshProUGUI>();
+            System.Random rnd = new System.Random();
+            int index = rnd.Next(MissedStrings.Count);
+            keyText.text = MissedStrings[index];
+            gameObject.transform.position = new Vector3(Screen.width - 100, Screen.height / 2, 0);
+
         }
     }
 
@@ -84,7 +104,7 @@ public class QuickTimeEventUI : MonoBehaviour
         float closestTime = 0;
         foreach (TMPro.TextMeshProUGUI text in textlist.Keys)
         {
-            if (textlist[text].time + textlist[text].duration < closestTime)
+            if (textlist[text].time + textlist[text].duration > closestTime)
             {
                 closest = text;
                 closestTime = textlist[text].time + textlist[text].duration;

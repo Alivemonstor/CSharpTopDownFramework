@@ -2518,9 +2518,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f83f53fe2db6274abb31d89eb2bfc54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textlist: []
   Client: {fileID: 1870609564}
   Panel: {fileID: 632243672}
+  MissedStrings:
+  - You Missed!
+  - Wrong Key!
+  - Try Again
 --- !u!222 &843417944
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -21226,6 +21229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToWait: 1
   UI: {fileID: 843417943}
+  duration: 4
   keys: 610000007300000064000000
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
