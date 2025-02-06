@@ -38,7 +38,16 @@ public class PlayerData : MonoBehaviour
 
     public void LoadFromJson()
     {
+
         string PDataLoaded = System.IO.File.ReadAllText(Application.persistentDataPath + "/PlayerData.json");
+        if (PDataLoaded == null)
+        {
+            Inventory = null;
+            Coins = 0;
+            Days = 0;
+            FinishedGames = null;
+            return;
+        }
         GameData player = JsonUtility.FromJson<GameData>(PDataLoaded);
         Coins = player.Coins;
         Days = player.Days;

@@ -21059,6 +21059,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1618778962}
   - component: {fileID: 1618778967}
+  - component: {fileID: 1618778970}
   - component: {fileID: 1618778969}
   - component: {fileID: 1618778966}
   - component: {fileID: 1618778965}
@@ -21270,6 +21271,22 @@ MonoBehaviour:
     m_Bits: 64
   detectionRadius: 0.2
   interactionText: {fileID: 1517940788}
+--- !u!114 &1618778970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618778961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 949a3c25be09d1541b7ef58366d5cc5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Inventory: []
+  Coins: 0
+  Days: 0
+  FinishedGames: []
 --- !u!1 &1803052487
 GameObject:
   m_ObjectHideFlags: 0

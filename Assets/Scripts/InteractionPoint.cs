@@ -17,3 +17,4 @@ public abstract class InteractionPoint : MonoBehaviour
         return "Press E to interact with " + gameObject.name;
     }
 }
+
