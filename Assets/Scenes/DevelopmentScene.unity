@@ -15167,6 +15167,7 @@ GameObject:
   - component: {fileID: 1432996587}
   - component: {fileID: 1432996586}
   - component: {fileID: 1432996589}
+  - component: {fileID: 1432996590}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -15238,9 +15239,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1432996589}
-        m_TargetAssemblyTypeName: PlayerData, Assembly-CSharp
-        m_MethodName: LoadFromJson
+      - m_Target: {fileID: 1432996590}
+        m_TargetAssemblyTypeName: Inventory, Assembly-CSharp
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15304,6 +15305,21 @@ MonoBehaviour:
   Coins: 0
   Days: 0
   FinishedGames: []
+--- !u!114 &1432996590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432996584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0ff11e1c25e654785a54b6664d36d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items: []
+  maxSpace: 20
+  playerData: {fileID: 1618778970}
 --- !u!1 &1472881333
 GameObject:
   m_ObjectHideFlags: 0

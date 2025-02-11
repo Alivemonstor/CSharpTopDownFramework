@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 
@@ -36,11 +37,31 @@ public class PlayerData : MonoBehaviour
         return FinishedGames;
     }
 
+    public void SetInventory(List<Item> inventory)
+    {
+        this.Inventory = inventory;
+    }
+
+    public void SetCoins(int coins)
+    {
+        this.Coins = coins;
+    }
+
+    public void SetDays(int days)
+    {
+        this.Days = days;
+    }
+
+    public void SetFinishedGames(List<PastPlayerData> finishedGames)
+    {
+        this.FinishedGames = finishedGames;
+    }
+
     public void LoadFromJson()
     {
+        string path = Application.persistentDataPath + "/PlayerData.json";
 
-        string PDataLoaded = System.IO.File.ReadAllText(Application.persistentDataPath + "/PlayerData.json");
-        if (PDataLoaded == null)
+        if (!File.Exists(path))
         {
             Inventory = null;
             Coins = 0;
@@ -48,6 +69,8 @@ public class PlayerData : MonoBehaviour
             FinishedGames = null;
             return;
         }
+
+        string PDataLoaded = System.IO.File.ReadAllText(path);
         GameData player = JsonUtility.FromJson<GameData>(PDataLoaded);
         Coins = player.Coins;
         Days = player.Days;
@@ -55,7 +78,8 @@ public class PlayerData : MonoBehaviour
         FinishedGames = player.FinishedGames;
     }
     
-    public void SaveIntoJson(List<Item> inventory, int coins, int days, List<PastPlayerData> finishedGames){
+    public void SaveIntoJson(List<Item> inventory, int coins, int days, List<PastPlayerData> finishedGames)
+    {
         GameData player = new GameData();
         player.Inventory = inventory;
         player.Coins = coins;
