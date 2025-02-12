@@ -1,44 +1,77 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+
+
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private GameObject InventoryPanel;
-    [SerializeField] private GameObject InventorySlot;
-    [SerializeField] private GameObject InventoryItem;
-    [SerializeField] private Transform InventorySlotParent;
-    [SerializeField] private Transform InventoryItemParent;
-    private Inventory inventory;
-    private  List<Item> items;
-    private bool active = false;
+    [SerializeField] private Inventory inventory; 
+    [SerializeField] private List<Item> items;
+    [SerializeField] private List<GameObject> slots;
+    [SerializeField] private bool active = false;
 
-    public void Start()
+ 
+    public void BuildUI()
     {
-        for (int i = 0; i < inventory.space; i++)
-        {
-            slots[i].index = i;
-            items[i].index = i;
-        }
-        UpdateUI();
-    }
+        int offsetX = 0;
+        int offsetY = 0;
 
-    public void UpdateUI()
-    {
-        for (int i = 0; i < inventory.; i++)
+        for (int i = 0; i < inventory.GetMaxSpace(); i++)
         {
-            if (i < inventory.items.Count)
+            if (i % 5 == 0)
             {
-                inventory.AddItem();
+                offsetX = 0;
+                offsetY += 60;
             }
             else
             {
-                inventory.RemoveItem(i);
-            }
+                offsetX += 60;
+            }     
+            GameObject slot = new GameObject("Slot");
+            slot.transform.SetParent(InventoryPanel.transform);
+            slot.AddComponent<RectTransform>();
+            slot.AddComponent<CanvasRenderer>();
+            slot.AddComponent<UnityEngine.UI.Image>();
+            slot.GetComponent<UnityEngine.UI.Image>().color = new Color(1, 1, 1, 1.0f);
+            slot.GetComponent<RectTransform>().sizeDelta = new Vector2(64, 64);
+            slot.GetComponent<RectTransform>().anchoredPosition = new Vector2(offsetX, offsetY);
+            slots.Add(slot);
         }
+
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            GameObject item = new GameObject("Item");
+            item.transform.SetParent(slots[i].transform);
+            item.AddComponent<RectTransform>();
+            item.AddComponent<CanvasRenderer>();
+            item.AddComponent<UnityEngine.UI.Image>();
+            item.GetComponent<UnityEngine.UI.Image>().sprite = Sprite.Create(new Texture2D(64, 64), new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+            item.GetComponent<RectTransform>().sizeDelta = new Vector2(32, 32);
+            item.GetComponent<RectTransform>().anchoredPosition = slots[i].GetComponent<RectTransform>().anchoredPosition;
+        }
+    }
+
+    public void DestroyUI()
+    {
+        for (int i = 0; i < inventory.GetMaxSpace(); i++)
+        {
+            Debug.Log("Destroying Slot" + i);
+            Destroy(slots[i]);
+        }    
+        slots.Clear();
+    }
+
+    public void UpdateInventory()
+    {
+        //Update inventory
     }
 
     public void UpdateSlot(int slot)
     {
-        inventory.AddItem(items[i]);
-        inventory.RemoveItem(items[i].slot);
+        // Update slot
     }
     
     public void ToggleInventory(List<Item> Inventory)
@@ -48,7 +81,9 @@ public class InventoryUI : MonoBehaviour
         if (active)
         {
             items = Inventory;
-            UpdateUI();
+            BuildUI();
+            return;
         }
+        DestroyUI();
     }
 }

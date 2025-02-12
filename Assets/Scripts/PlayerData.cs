@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-
-
-
 public class PlayerData : MonoBehaviour
 {
     [SerializeField] private List<Item> Inventory;
@@ -39,22 +36,23 @@ public class PlayerData : MonoBehaviour
 
     public void SetInventory(List<Item> inventory)
     {
-        this.Inventory = inventory;
+        Debug.Log("Setting Inventory");
+        Inventory = inventory;
     }
 
     public void SetCoins(int coins)
     {
-        this.Coins = coins;
+        Coins = coins;
     }
 
     public void SetDays(int days)
     {
-        this.Days = days;
+        Days = days;
     }
 
     public void SetFinishedGames(List<PastPlayerData> finishedGames)
     {
-        this.FinishedGames = finishedGames;
+        FinishedGames = finishedGames;
     }
 
     public void LoadFromJson()
@@ -89,6 +87,9 @@ public class PlayerData : MonoBehaviour
         string PDataSaved = JsonUtility.ToJson(player);
         System.IO.File.WriteAllText(Application.persistentDataPath + "/PlayerData.json", PDataSaved);
     }
+
+
+
 }
 
 [System.Serializable]

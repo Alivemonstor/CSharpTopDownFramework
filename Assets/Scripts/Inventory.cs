@@ -70,10 +70,15 @@ public struct Item
 
 public class Inventory : MonoBehaviour
 {
-
-    public List<Item> items;
-    public int maxSpace = 20;
+    [SerializeField] private InventoryUI UI; 
+    [SerializeField] private List<Item> items;
+    [SerializeField] private int maxSpace = 20;
     [SerializeField] private PlayerData playerData;
+
+    public int GetMaxSpace()
+    {
+        return this.maxSpace;
+    }
 
     public List<Item> CreateInventory()
     {
@@ -87,18 +92,27 @@ public class Inventory : MonoBehaviour
             Debug.Log("No Inventory Found, Creating");
             items = CreateInventory();
         }
+        AddTestItem();
+    }
+
+    public void AddTestItem()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Item item = new Item("Test", 1, true, -1);
+            AddItem(item);
+        }
     }
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            Debug.Log("Inventory: ");
-            foreach (Item item in items)
-            {
-                Debug.Log(item.GetName() + " " + item.GetAmount());
-            }
-            
+            UI.ToggleInventory(items);
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            playerData.SaveIntoJson(items,  playerData.GetCoins(),  playerData.GetDays(),  playerData.GetFinishedGames());
         }
     }
 
@@ -107,10 +121,10 @@ public class Inventory : MonoBehaviour
         int toSend = -1;
         for (int i = 0; i < maxSpace; i++)
         {
-
             if (items.Count < i)
             {
                 toSend = i;
+                break;
             }
         }
         return toSend;
@@ -146,17 +160,21 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item item)
     {
-        Debug.Log("Adding Item: " + item.GetName() + " Amount: " + item.GetAmount() + " canStack: " + item.GetCanStack() + " Slot: " + item.GetSlot());
         if (items.Count <= maxSpace && item.GetCanStack() == false)
         {
-            int slot = FindNextSlot();
-            if (slot == -1)
+            
+            if (item.GetSlot() == -1)
             {
-                Debug.Log("Inventory is full canstack == false");
-                return;
+                int slot = FindNextSlot();
+                if (slot == -1)
+                {
+                    Debug.Log("Inventory is full canstack == false");
+                    return;
+                }
+                item.SetSlot(slot);
             }
-            item.SetSlot(slot);
             items.Add(item);
+            Debug.Log("Added Item: " + item.GetName() + " Amount: " + item.GetAmount() + " canStack: " + item.GetCanStack() + " Slot: " + item.GetSlot());
             playerData.SetInventory(items);
             return;
         } 
@@ -166,25 +184,28 @@ public class Inventory : MonoBehaviour
             Debug.Log("Item in Inventory: " + itemInInventory.GetName());
             if (itemInInventory.GetName() == "none")
             {
-                int slot = FindNextSlot();
-                if (slot == -1)
+                if (item.GetSlot() == -1)
                 {
-                    Debug.Log("Inventory is full canstack == true");
-                    return;
+                    int slot = FindNextSlot();
+                    if (slot == -1)
+                    {
+                        Debug.Log("Inventory is full canstack == true");
+                        return;
+                    }
+                    item.SetSlot(slot);
                 }
-                item.SetSlot(slot);
                 items.Add(item);
                 playerData.SetInventory(items);
                 return;
             }
 
-            if (itemInInventory.GetAmount() > 30)
+            if (itemInInventory.GetAmount() >= 30 || itemInInventory.GetAmount() + item.GetAmount() > 30)
             {
                 Debug.Log("Cant Stack Anymore");
                 return;
             }
 
-            itemInInventory.SetAmount(item.GetAmount() + 1);    
+            itemInInventory.SetAmount(itemInInventory.GetAmount() + item.GetAmount());    
             playerData.SetInventory(items);
             return;
 
