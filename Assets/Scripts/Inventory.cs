@@ -79,14 +79,6 @@ public class Inventory : MonoBehaviour
     {
         return new List<Item>();
     }
-
-    public void AddTestItems()
-    {
-        AddItem(new Item("Sword", 1, false, FindNextSlot()));
-        AddItem(new Item("Shield", 1, false, FindNextSlot()));
-        AddItem(new Item("Potion", 5, true, FindNextSlot()));
-    }
-
     public void Start()
     {
         items = playerData.GetInventory();
@@ -95,9 +87,6 @@ public class Inventory : MonoBehaviour
             Debug.Log("No Inventory Found, Creating");
             items = CreateInventory();
         }
-        Debug.Log("AddingItems");
-
-        AddTestItems();
     }
 
     public void Update()
@@ -109,6 +98,7 @@ public class Inventory : MonoBehaviour
             {
                 Debug.Log(item.GetName() + " " + item.GetAmount());
             }
+            
         }
     }
 
