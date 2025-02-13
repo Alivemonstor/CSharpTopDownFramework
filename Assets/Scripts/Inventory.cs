@@ -27,7 +27,9 @@ public struct Item
     }
     public void SetAmount(int amount)
     {
+        Debug.Log("Setting Amount: " + amount);
         this.amount = amount;
+        Debug.Log("Amount Set: " + this.amount);
     }
     public void SetCanStack(bool canStack)
     {
@@ -84,6 +86,7 @@ public class Inventory : MonoBehaviour
     {
         return new List<Item>();
     }
+
     public void Start()
     {
         items = playerData.GetInventory();
@@ -97,9 +100,9 @@ public class Inventory : MonoBehaviour
 
     public void AddTestItem()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 7; i++)
         {
-            Item item = new Item("Test", 1, true, -1);
+            Item item = new Item("Test", 7, true, -1);
             AddItem(item);
         }
     }
@@ -133,11 +136,11 @@ public class Inventory : MonoBehaviour
     public Item HasItem(string name)
     {
         Debug.Log("Checking for item: " + name);
-        #nullable enable
         foreach (Item item in items)
         {
-            if (item.GetName() == name)
+            if (item.GetName() == name && item.GetCanStack() == true)
             {
+                Debug.Log("Found Item: " + item.GetName());
                 return item;
             }
         }
@@ -194,18 +197,36 @@ public class Inventory : MonoBehaviour
                     }
                     item.SetSlot(slot);
                 }
+                Debug.Log("Added Item: " + item.GetName() + " Amount: " + item.GetAmount() + " canStack: " + item.GetCanStack() + " Slot: " + item.GetSlot());
                 items.Add(item);
                 playerData.SetInventory(items);
                 return;
             }
 
-            if (itemInInventory.GetAmount() >= 30 || itemInInventory.GetAmount() + item.GetAmount() > 30)
+            if (itemInInventory.GetAmount() >= 30)
             {
+                itemInInventory.SetCanStack(false);
+                items[itemInInventory.GetSlot()-1] = itemInInventory;
                 Debug.Log("Cant Stack Anymore");
                 return;
             }
 
+            if (itemInInventory.GetAmount() + item.GetAmount() > 30)
+            {
+                int amount = 30 - itemInInventory.GetAmount();
+                item.SetAmount(item.GetAmount() - amount);
+                itemInInventory.SetAmount(30);
+                itemInInventory.SetCanStack(false);
+                items[itemInInventory.GetSlot()-1] = itemInInventory;
+                playerData.SetInventory(items);
+                AddItem(item);
+                return;
+            }
+
+
+            Debug.Log("Stacking Item: " + item.GetName() + " Amount: " + item.GetAmount() + " canStack: " + item.GetCanStack() + " Slot: " + item.GetSlot() + " with Item: " + itemInInventory.GetName() + " Amount: " + itemInInventory.GetAmount() + " canStack: " + itemInInventory.GetCanStack() + " Slot: " + itemInInventory.GetSlot());
             itemInInventory.SetAmount(itemInInventory.GetAmount() + item.GetAmount());    
+            items[itemInInventory.GetSlot()-1] = itemInInventory;
             playerData.SetInventory(items);
             return;
 

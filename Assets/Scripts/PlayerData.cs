@@ -16,43 +16,43 @@ public class PlayerData : MonoBehaviour
 
     public List<Item> GetInventory()
     {
-        return Inventory;
+        return this.Inventory;
     }
 
     public int GetCoins()
     {
-        return Coins;
+        return this.Coins;
     }
 
     public int GetDays()
     {
-        return Days;
+        return this.Days;
     }
 
     public List<PastPlayerData> GetFinishedGames()
     {
-        return FinishedGames;
+        return this.FinishedGames;
     }
 
     public void SetInventory(List<Item> inventory)
     {
         Debug.Log("Setting Inventory");
-        Inventory = inventory;
+        this.Inventory = inventory;
     }
 
     public void SetCoins(int coins)
     {
-        Coins = coins;
+        this.Coins = coins;
     }
 
     public void SetDays(int days)
     {
-        Days = days;
+        this.Days = days;
     }
 
     public void SetFinishedGames(List<PastPlayerData> finishedGames)
     {
-        FinishedGames = finishedGames;
+        this.FinishedGames = finishedGames;
     }
 
     public void LoadFromJson()
@@ -61,7 +61,7 @@ public class PlayerData : MonoBehaviour
 
         if (!File.Exists(path))
         {
-            Inventory = null;
+            Inventory = new List<Item>();
             Coins = 0;
             Days = 0;
             FinishedGames = null;
