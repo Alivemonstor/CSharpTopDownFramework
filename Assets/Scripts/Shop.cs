@@ -2,23 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
-public struct ShopItem 
+public class ShopItem : Item
 {
-    [SerializeField] private string name;
     [SerializeField] private int price;
     [SerializeField] private string description;
 
-    public ShopItem(string name, int price, string description)
+    public ShopItem(string name, int price, string description, int itemIndex) : base(name, 1, true, -1, itemIndex)
     {
-        this.name = name;
         this.price = price;
         this.description = description;
     }
 
-    public void SetName(string name)
-    {
-        this.name = name;
-    }
 
     public void SetPrice(int price)
     {
@@ -28,11 +22,6 @@ public struct ShopItem
     public void SetDescription(string description)
     {
         this.description = description;
-    }
-
-    public string GetName()
-    {
-        return this.name;
     }
 
     public int GetPrice()
@@ -88,7 +77,8 @@ public class Shop : MonoBehaviour
         if (playerData.GetCoins() >= shopItem.GetPrice())
         {
             playerData.SetCoins(playerData.GetCoins() - shopItem.GetPrice());
-            playerData.GetInventory().Add(new Item(shopItem.GetName(), 1, true, -1));
+            
+            playerData.GetInventory().Add(new Item(shopItem.GetName(), 1, true, -1, shopItem.GetItemIndex()));
         }
     }
 }

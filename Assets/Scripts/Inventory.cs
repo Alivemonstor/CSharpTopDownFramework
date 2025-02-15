@@ -2,21 +2,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct Item
+public class Item
 {
     [SerializeField] private string name;
     [SerializeField] private int amount;
     [SerializeField] private bool canStack;
     [SerializeField] private int slot;
+    [SerializeField] private int itemIndex;
+
 
     // Constructor
 
-    public Item(string name, int amount, bool canStack, int slot)
+    public Item(string name, int amount, bool canStack, int slot, int itemIndex)
     {
         this.name = name;
         this.amount = amount;
         this.canStack = canStack;
         this.slot = slot;
+        this.itemIndex = itemIndex;
     }
 
     // Setters
@@ -43,9 +46,12 @@ public struct Item
             Debug.Log("Invalid slot");
             return;
         }
-
-
         this.slot = slot;
+    }
+
+    public void SetItemIndex(int itemIndex)
+    {
+        this.itemIndex = itemIndex;
     }
 
     // Getters
@@ -66,6 +72,11 @@ public struct Item
     public int GetSlot()
     {
         return this.slot;
+    }
+
+    public int GetItemIndex()
+    {
+        return this.itemIndex;
     }
 
 }
@@ -102,7 +113,9 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < 7; i++)
         {
-            Item item = new Item("Test", 7, true, -1);
+            int index = playerData.GetRandomItemIndex();
+            string name = playerData.GetNameFromIndex(index);
+            Item item = new Item(name, 7, true, -1, index);
             AddItem(item);
         }
     }
@@ -117,15 +130,24 @@ public class Inventory : MonoBehaviour
         {
             playerData.SaveIntoJson(items,  playerData.GetCoins(),  playerData.GetDays(),  playerData.GetFinishedGames());
         }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            int index = playerData.GetRandomItemIndex();
+            string name = playerData.GetNameFromIndex(index);
+            Item item = new Item(name, 7, true, -1, index);
+            AddItem(item);
+        }
     }
 
     public int FindNextSlot()
     {
         int toSend = -1;
-        for (int i = 0; i < maxSpace; i++)
+        for (int i = 0; i <= maxSpace; i++)
         {
+            Debug.Log("Checking Slot: " + i);
             if (items.Count < i)
             {
+            Debug.Log("Slot: " + i + " is empty");
                 toSend = i;
                 break;
             }
@@ -144,7 +166,7 @@ public class Inventory : MonoBehaviour
                 return item;
             }
         }
-        return new Item("none", 1, false, -1);
+        return new Item("none", 1, false, -1, -1);
     }
 
     public Item GetItemBySlot(int slot)
@@ -152,12 +174,12 @@ public class Inventory : MonoBehaviour
         if (slot < 0 || slot >= items.Count)
         {
             Debug.Log("Invalid slot");
-            return new Item("none", 1, false, -1);
+            return new Item("none", 1, false, -1, -1);
         }
 
         #nullable enable
         Item? item = items[slot];
-        return item ?? new Item("none", 1, false, -1);
+        return item ?? new Item("none", 1, false, -1, -1);
 
     }
 
@@ -178,6 +200,7 @@ public class Inventory : MonoBehaviour
             }
             items.Add(item);
             Debug.Log("Added Item: " + item.GetName() + " Amount: " + item.GetAmount() + " canStack: " + item.GetCanStack() + " Slot: " + item.GetSlot());
+            UI.UpdateSlot(item.GetSlot()-1, item);
             playerData.SetInventory(items);
             return;
         } 
@@ -200,6 +223,7 @@ public class Inventory : MonoBehaviour
                 Debug.Log("Added Item: " + item.GetName() + " Amount: " + item.GetAmount() + " canStack: " + item.GetCanStack() + " Slot: " + item.GetSlot());
                 items.Add(item);
                 playerData.SetInventory(items);
+                UI.UpdateSlot(item.GetSlot()-1, item);
                 return;
             }
 
@@ -207,6 +231,7 @@ public class Inventory : MonoBehaviour
             {
                 itemInInventory.SetCanStack(false);
                 items[itemInInventory.GetSlot()-1] = itemInInventory;
+                playerData.SetInventory(items);
                 Debug.Log("Cant Stack Anymore");
                 return;
             }
@@ -219,6 +244,7 @@ public class Inventory : MonoBehaviour
                 itemInInventory.SetCanStack(false);
                 items[itemInInventory.GetSlot()-1] = itemInInventory;
                 playerData.SetInventory(items);
+                UI.UpdateSlot(itemInInventory.GetSlot()-1, itemInInventory);
                 AddItem(item);
                 return;
             }
@@ -228,6 +254,7 @@ public class Inventory : MonoBehaviour
             itemInInventory.SetAmount(itemInInventory.GetAmount() + item.GetAmount());    
             items[itemInInventory.GetSlot()-1] = itemInInventory;
             playerData.SetInventory(items);
+            UI.UpdateSlot(itemInInventory.GetSlot()-1, itemInInventory);
             return;
 
         } 
