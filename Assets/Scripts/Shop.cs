@@ -41,6 +41,7 @@ public class ShopItem : Item
 public class Shop : MonoBehaviour
 {
     [SerializeField] private List<ShopItem> ShopItems;
+    [SerializeField] private Inventory Inventory;
 
     public List<ShopItem> GetShopItems()
     {
@@ -80,5 +81,11 @@ public class Shop : MonoBehaviour
             
             playerData.GetInventory().Add(new Item(shopItem.GetName(), 1, true, -1, shopItem.GetItemIndex()));
         }
+    }
+
+    public void SellItem(ShopItem item, PlayerData playerData)
+    {
+        playerData.SetCoins(playerData.GetCoins() + item.GetPrice());
+        playerData.GetInventory().Remove(Inventory.HasItem(item.GetName()));
     }
 }

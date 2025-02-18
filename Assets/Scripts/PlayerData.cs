@@ -33,6 +33,7 @@ public class PlayerData : MonoBehaviour
         "Frog", "Tadpole", "Axolotl"
     };
 
+
     public int GetRandomItemIndex()
     {
         int index = Random.Range(0, itemNames.Count);
@@ -47,6 +48,7 @@ public class PlayerData : MonoBehaviour
     public void Start()
     {
         LoadFromJson();
+        Debug.Log(this.FinishedGames);
     }
 
     public List<Item> GetInventory()
@@ -66,7 +68,8 @@ public class PlayerData : MonoBehaviour
 
     public List<PastPlayerData> GetFinishedGames()
     {
-        return this.FinishedGames;
+        Debug.Log("Getting Finished Games");
+        return FinishedGames;
     }
 
     public void SetInventory(List<Item> inventory)

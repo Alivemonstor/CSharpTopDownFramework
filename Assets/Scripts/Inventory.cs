@@ -106,7 +106,6 @@ public class Inventory : MonoBehaviour
             Debug.Log("No Inventory Found, Creating");
             items = CreateInventory();
         }
-        AddTestItem();
     }
 
     public void AddTestItem()
@@ -276,7 +275,7 @@ public class Inventory : MonoBehaviour
 
         if (items[slot].GetAmount() > 1)
         {
-            items[slot].SetAmount(items[slot].GetAmount() + 1);
+            items[slot].SetAmount(items[slot].GetAmount() - 1);
             playerData.SetInventory(items);
             return;
         }
